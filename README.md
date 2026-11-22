@@ -1,22 +1,19 @@
 # RomSync
 
-App Android (Kotlin + Jetpack Compose) para manejar los ROMs, BIOS y partidas de una tablet o teléfono Android
-contra el disco duro del PC, **sin instalar nada en el PC** (usa el servidor OpenSSH que trae Windows, como Nixel).
+App Android para sincronizar juegos, partidas y archivos entre una tablet o teléfono y el PC, por SFTP y
+**sin instalar nada en el PC** (usa el servidor OpenSSH que trae Windows). La hice con Claude, como mis otras apps.
 
 ## Qué hace
 
-- **Tienda** (estilo eShop): la biblioteca del PC y la de la tablet juntas, con carátulas de SteamGridDB.
-  Cada juego dice cuánto ocupa y cuánto espacio queda; descargar pide confirmación de espacio, borrar pide
-  confirmación y nunca toca las partidas.
-- Entiende juegos de varios archivos: `.cue/.bin`, `.gdi`, `.m3u` con sus discos, carpetas de PS3/Wii U y los de
-  **Switch con su actualización y DLC** (por TitleID; eliges qué partes bajar).
+- **Biblioteca**: los juegos del PC y de la tablet juntos, con carátulas de SteamGridDB. Cada juego dice cuánto
+  ocupa y cuánto espacio queda; descargar y borrar piden confirmación, y borrar nunca toca las partidas.
+- Reconoce juegos de varios archivos (varios discos, actualizaciones y contenido adicional) y deja elegir qué
+  partes bajar.
 - **Descargas** en segundo plano, con pausa y reanudación si se corta.
-- **Partidas**: respaldo en el PC de RetroArch, Dolphin, ARMSX2, Eden, Vita3K, WatermelonDS y Azahar (manual o
-  automático cada N horas con WiFi), historial y restauración. Las de Android/data necesitan **Shizuku**.
-  Ver [docs/INVESTIGACION.md](docs/INVESTIGACION.md).
-- **Web**: la tablet sirve una web con QR y PIN. Desde el navegador del PC:
-  plataformas y juegos (subir arrastrando, instalar desde el PC, borrar, carátulas), BIOS, partidas (bajar en zip,
-  respaldar, restaurar) y herramientas (explorador de archivos, instalar APK).
+- **Partidas**: respaldo en el PC (manual o automático cada N horas con WiFi), historial y restauración.
+  Las que están en Android/data necesitan **Shizuku**. Ver [docs/INVESTIGACION.md](docs/INVESTIGACION.md).
+- **Web**: la tablet sirve una página con QR y PIN para administrar juegos, partidas y archivos desde el
+  navegador del PC.
 
 ## Preparar el PC (una vez)
 
@@ -26,8 +23,8 @@ contra el disco duro del PC, **sin instalar nada en el PC** (usa el servidor Ope
    Start-Service sshd
    Set-Service -Name sshd -StartupType Automatic
    ```
-3. En la app: Ajustes → PC: la IP del PC (`ipconfig`), tu usuario y contraseña de Windows y la carpeta de ROMs
-   (por ejemplo `D:\Emulación\ROMs`, con una carpeta por plataforma como ES-DE: `psx`, `ps2`, `switch`…, y `bios`).
+3. En la app: Ajustes → PC: la IP del PC (`ipconfig`), tu usuario y contraseña de Windows y la carpeta de juegos
+   (por ejemplo `D:\Juegos`, con una carpeta por plataforma).
 
 ## Compilar
 
