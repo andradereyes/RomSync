@@ -23,12 +23,15 @@ android {
         ?.let { f -> Properties().apply { f.inputStream().use { load(it) } } }
     signingConfigs {
         // Clave fija para las APK de GitHub Actions: sin ella cada compilación salía firmada con otra clave de
-        // depuración y Android obligaba a desinstalar (y se perdían los ajustes). No es secreta: es una app personal.
-        create("shared") {
-            storeFile = file("romsync-shared.keystore")
-            storePassword = "romsync"
+        // depuración y Android obligaba a desinstalar (y se perdían los ajustes). No está en el repositorio:
+        // GitHub Actions la crea desde los secretos KEYSTORE_BASE64 y KEYSTORE_PASSWORD.
+        val sharedKeystore = file("release.keystore")
+        val sharedPassword = System.getenv("KEYSTORE_PASSWORD")
+        if (sharedKeystore.exists() && !sharedPassword.isNullOrEmpty()) create("shared") {
+            storeFile = sharedKeystore
+            storePassword = sharedPassword
             keyAlias = "romsync"
-            keyPassword = "romsync"
+            keyPassword = sharedPassword
         }
         if (keyProps != null) create("release") {
             storeFile = file(keyProps.getProperty("storeFile"))
@@ -39,12 +42,13 @@ android {
     }
 
     buildTypes {
-        debug { signingConfig = signingConfigs.getByName("shared") }
+        debug { signingConfigs.findByName("shared")?.let { signingConfig = it } }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs.findByName("release") ?: signingConfigs.getByName("shared")
+            signingConfig = signingConfigs.findByName("release") ?: signingConfigs.findByName("shared")
+                ?: signingConfigs.getByName("debug")
         }
     }
     compileOptions {
